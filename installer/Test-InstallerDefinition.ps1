@@ -6,6 +6,10 @@ param(
 
 $ErrorActionPreference = "Stop"
 $definition = Get-Content -LiteralPath $DefinitionPath -Raw
+$autoUnlockUninstallFailureText = -join [char[]](
+    0x81EA, 0x52A8, 0x89E3, 0x9501, 0x7EC4,
+    0x4EF6, 0x5378, 0x8F7D, 0x5931, 0x8D25
+)
 $requiredPatterns = @(
     "PrivilegesRequired=admin",
     "ArchitecturesAllowed=x64compatible",
@@ -20,7 +24,7 @@ $requiredPatterns = @(
     "Uninstall-P1Provider.ps1",
     "-RemoveEncryptedCredential -RemoveDataDirectory",
     "if Result then",
-    "自动解锁组件卸载失败",
+    $autoUnlockUninstallFailureText,
     "Remove-AllUserData.ps1",
     "DotNet48Release"
 )
