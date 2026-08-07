@@ -25,6 +25,11 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\installer\Build-Instal
 - 发布目录白名单、文件清单、敏感文件排除和安装定义。
 - 网络通配、授权前网络刷新、会话隔离、消费失败恢复和唤醒有限重试。
 
+GitHub Actions 的托管 Runner 没有可用的蓝牙无线电，因此 CI 使用
+`Test-BleProximityWake.ps1 -SkipBleWatcherRuntime`：仍编译 BLE 桥并测试队列、配置和
+状态机，但跳过 WinRT Watcher 的真实启停和模式切换。开发机执行不带参数的命令，必须
+通过真实 Watcher 测试；该硬件测试不能由 CI 成功结果替代。
+
 ## 3. 隔离动作测试
 
 运行前退出已安装的 Agent 和旧 PowerShell 常驻程序。脚本使用独立诊断目录，不覆盖正式

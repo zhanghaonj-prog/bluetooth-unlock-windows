@@ -1,3 +1,8 @@
+[CmdletBinding()]
+param(
+    [switch]$SkipBleWatcherRuntime
+)
+
 $ErrorActionPreference = "Stop"
 
 $scriptRoot = if ($PSScriptRoot) { $PSScriptRoot } else { Split-Path -Parent $MyInvocation.MyCommand.Path }
@@ -164,21 +169,26 @@ try {
     Assert-True ($bridge.GetScanningMode() -eq "Passive") "BLE bridge should default to passive scanning."
     Assert-True ($bridge.GetQueueCount() -eq 0) "New BLE bridge queue should be empty."
     Assert-True ($bridge.ClearQueue() -eq 0) "Clearing a new BLE bridge queue should remove no records."
-    $bridge.Start()
-    Start-Sleep -Milliseconds 300
-    1..4 | ForEach-Object {
-        [void]$bridge.EnsureStarted($true)
-        Start-Sleep -Milliseconds 300
+    if ($SkipBleWatcherRuntime) {
+        Write-Host "Skipping BLE watcher runtime checks because no Bluetooth radio is available."
     }
-    Assert-True ($bridge.GetStatus() -eq "Started") "BLE watcher did not start."
-    Assert-True ($bridge.GetScanningMode() -eq "Active") "BLE watcher did not switch to active scanning."
-    Assert-True ($bridge.GetForcedRecoveryCount() -eq 0) "BLE watcher unexpectedly required forced recovery during a normal mode switch."
-    $restartCountBeforeRecovery = $bridge.GetRestartCount()
-    [void]$bridge.Restart($true, $true)
-    Start-Sleep -Milliseconds 300
-    Assert-True ($bridge.GetStatus() -eq "Started") "Explicit BLE recovery did not restart the watcher."
-    Assert-True ($bridge.GetScanningMode() -eq "Active") "Explicit BLE recovery did not preserve active scanning."
-    Assert-True ($bridge.GetRestartCount() -eq ($restartCountBeforeRecovery + 1)) "Explicit BLE recovery must count exactly one restart."
+    else {
+        $bridge.Start()
+        Start-Sleep -Milliseconds 300
+        1..4 | ForEach-Object {
+            [void]$bridge.EnsureStarted($true)
+            Start-Sleep -Milliseconds 300
+        }
+        Assert-True ($bridge.GetStatus() -eq "Started") "BLE watcher did not start."
+        Assert-True ($bridge.GetScanningMode() -eq "Active") "BLE watcher did not switch to active scanning."
+        Assert-True ($bridge.GetForcedRecoveryCount() -eq 0) "BLE watcher unexpectedly required forced recovery during a normal mode switch."
+        $restartCountBeforeRecovery = $bridge.GetRestartCount()
+        [void]$bridge.Restart($true, $true)
+        Start-Sleep -Milliseconds 300
+        Assert-True ($bridge.GetStatus() -eq "Started") "Explicit BLE recovery did not restart the watcher."
+        Assert-True ($bridge.GetScanningMode() -eq "Active") "Explicit BLE recovery did not preserve active scanning."
+        Assert-True ($bridge.GetRestartCount() -eq ($restartCountBeforeRecovery + 1)) "Explicit BLE recovery must count exactly one restart."
+    }
 }
 finally {
     $bridge.Dispose()
