@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows-build-and-test:
+    runs-on: windows-2022
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: PowerShell regression
+        shell: powershell
+        run: .\Test-BleProximityWake.ps1
+
+      - name: Agent build and tests
+        shell: powershell
+        run: .\agent\Test-Agent.ps1 -Configuration Release
+
+      - name: Credential Provider build and tests
+        shell: powershell
+        run: .\credential-provider\Test-P0Provider.ps1
+
+      - name: Installer staging validation
+        shell: powershell
+        run: .\installer\Build-Installer.ps1 -Configuration Release -Version 0.1.0 -SkipBuild -StageOnly
+
+      - name: Verify clean source tree
+        shell: powershell
+        run: |
+          $unexpected = git status --short
+          if ($unexpected) {
+            $unexpected
+            throw "Build or tests changed tracked source files."
+          }
