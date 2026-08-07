@@ -17,7 +17,7 @@
     "addressLearningMinimumHits": 3
   },
   "phone": {
-    "enabled": false,
+    "enabled": true,
     "address": "",
     "nameContains": "",
     "rssiThreshold": -75,

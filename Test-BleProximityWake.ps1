@@ -62,6 +62,7 @@ Assert-True ([int]$sampleConfig.autoUnlock.loginPageDelayMilliseconds -eq 0) "Ar
 Assert-True ($sampleConfig.autoUnlock.interactiveWakeAllowIdleFallback -eq $true) "Interactive wake must support fresh input while the locked display remains on."
 Assert-True ($null -eq $sampleConfig.autoUnlock.PSObject.Properties['brokerPipeName']) "Sample config must not expose the fixed internal Broker pipe name."
 Assert-True ([int]$sampleConfig.phone.strongRssiSingleHitThreshold -eq -60) "Sample config must expose the phone strong-signal fast path."
+Assert-True ($sampleConfig.phone.enabled -eq $true) "Sample config must enable phone detection required by supported presence modes."
 Assert-True ([string]$sampleConfig.power.holdMode -eq "Disabled") "Sample config must allow Modern Standby by default."
 Assert-True ($sampleConfig.wake.enableVirtualKey -eq $true) "Sample config must expose the virtual-key diagnostic switch."
 
