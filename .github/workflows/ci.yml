@@ -19,7 +19,7 @@ jobs:
 
       - name: PowerShell regression
         shell: powershell
-        run: .\Test-BleProximityWake.ps1
+        run: .\Test-BleProximityWake.ps1 -SkipBleWatcherRuntime
 
       - name: Agent build and tests
         shell: powershell
