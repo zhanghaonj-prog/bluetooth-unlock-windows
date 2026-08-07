@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">BLE Proximity Wake</title>
+  <desc id="desc">A minimal display with a proximity indicator.</desc>
+  <rect x="16" y="16" width="224" height="224" rx="54" fill="#2563EB"/>
+  <rect x="54" y="61" width="148" height="108" rx="18" fill="none" stroke="#FFFFFF" stroke-width="16"/>
+  <path d="M98 204h60M128 169v35" fill="none" stroke="#FFFFFF" stroke-width="16" stroke-linecap="round"/>
+  <circle cx="128" cy="115" r="13" fill="#FFFFFF"/>
+</svg>

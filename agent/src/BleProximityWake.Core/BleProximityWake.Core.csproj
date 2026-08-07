@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProjectGuid>{81A59C1A-3AB6-41C7-98C2-122C25B96C40}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>BleProximityWake.Core</RootNamespace>
+    <AssemblyName>BleProximityWake.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Actions\ProximityActionCoordinator.cs" />
+    <Compile Include="Actions\ProximityActionDecision.cs" />
+    <Compile Include="Actions\ProximityActionInput.cs" />
+    <Compile Include="Actions\ProximityActionOptions.cs" />
+    <Compile Include="Actions\ProximityActionType.cs" />
+    <Compile Include="Bluetooth\BleAdvertisement.cs" />
+    <Compile Include="Bluetooth\BluetoothAddress.cs" />
+    <Compile Include="Bluetooth\DeviceAdvertisementMatcher.cs" />
+    <Compile Include="Bluetooth\DeviceMatcherOptions.cs" />
+    <Compile Include="Bluetooth\HexPatternMatcher.cs" />
+    <Compile Include="Presence\DevicePresenceTracker.cs" />
+    <Compile Include="Presence\PresenceDetectionOptions.cs" />
+    <Compile Include="Presence\PresenceMode.cs" />
+    <Compile Include="Presence\PresenceObservation.cs" />
+    <Compile Include="Presence\PresencePolicy.cs" />
+    <Compile Include="Presence\PresencePolicySet.cs" />
+    <Compile Include="Presence\PresenceDecision.cs" />
+    <Compile Include="Presence\PresenceDecisionEvaluator.cs" />
+    <Compile Include="Presence\PresenceTrackerSnapshot.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scanning\BleScanMode.cs" />
+    <Compile Include="Scanning\ScanContext.cs" />
+    <Compile Include="Scanning\ScanProfile.cs" />
+    <Compile Include="Scanning\ScanProfileSelector.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

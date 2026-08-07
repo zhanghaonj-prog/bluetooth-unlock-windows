@@ -1,0 +1,40 @@
+name: Bug report
+description: Report a reproducible non-security problem
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Do not submit passwords, SIDs, BLE addresses, network names, full logs, registry exports, or crash dumps. Use the Security tab for security-sensitive reports.
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+    validations:
+      required: true
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version and power model
+      placeholder: Windows 11 24H2, Modern Standby
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy confirmation
+      options:
+        - label: I removed credentials and personal device, network, user, and host identifiers.
+          required: true

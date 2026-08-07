@@ -1,0 +1,91 @@
+{
+  "target": {
+    "nameContains": "Apple Watch",
+    "address": "",
+    "manufacturerDataHexPrefix": "",
+    "manufacturerDataHexPattern": "",
+    "serviceUuid": ""
+  },
+  "proximity": {
+    "rssiThreshold": -75,
+    "learnedAddressRssiThreshold": -82,
+    "hitCount": 2,
+    "hitWindowSeconds": 10,
+    "lostSeconds": 30,
+    "cooldownSeconds": 45,
+    "addressLearningWindowSeconds": 20,
+    "addressLearningMinimumHits": 3
+  },
+  "phone": {
+    "enabled": false,
+    "address": "",
+    "nameContains": "",
+    "rssiThreshold": -75,
+    "strongRssiSingleHitThreshold": -60,
+    "hitCount": 2,
+    "hitWindowSeconds": 10,
+    "presenceTimeoutSeconds": 20
+  },
+  "autoLock": {
+    "enabled": false,
+    "absenceSeconds": 45,
+    "requireWatchAbsent": true,
+    "requirePhoneAbsent": true,
+    "requireAllowedNetwork": true,
+    "minimumUserIdleSeconds": 30,
+    "retrySeconds": 10
+  },
+  "autoUnlock": {
+    "enabled": false,
+    "loginPageDelayMilliseconds": 0,
+    "authorizationTtlMilliseconds": 5000,
+    "brokerResponseTimeoutMilliseconds": 3000,
+    "requireAllowedNetwork": true,
+    "requireAcPower": true,
+    "requirePhonePresence": true,
+    "triggerOnArrival": true,
+    "invokeWakeToLoginOnArrival": false,
+    "triggerOnInteractiveWake": true,
+    "interactiveWakeMinimumPriorIdleSeconds": 1,
+    "interactiveWakeInputFreshSeconds": 2,
+    "interactiveWakeMaxWatchAgeSeconds": 5,
+    "interactiveWakeConfirmationMilliseconds": 6000,
+    "interactiveWakeAllowIdleFallback": true,
+    "interactiveWakeLoginPageDelayMilliseconds": 0
+  },
+  "wake": {
+    "key": "Shift",
+    "enableMonitorPowerMessage": true,
+    "monitorPowerMessageTimeoutMilliseconds": 250,
+    "enableExecutionState": true,
+    "enableMouseNudge": true,
+    "enableMouseClick": false,
+    "enableScanCodeKey": true,
+    "enableVirtualKey": true,
+    "enableLegacyInput": true,
+    "allowWhenSessionUnknown": false,
+    "assumeLockedWhenLogonUiPresent": false
+  },
+  "network": {
+    "enabled": false,
+    "checkIntervalSeconds": 15,
+    "allowedProfileNames": [],
+    "allowedSsids": [],
+    "allowedInterfaceAliases": [],
+    "allowedDnsSuffixes": []
+  },
+  "power": {
+    "holdMode": "Disabled",
+    "timedHoldMinutes": 15
+  },
+  "diagnostics": {
+    "logLevel": "Info",
+    "logBleAdvertisements": false,
+    "heartbeatSeconds": 10,
+    "maxAdvertisementAgeSeconds": 5,
+    "activeScanWhenLocked": true,
+    "bleSamplingIntervalMilliseconds": 500,
+    "lockedPollIntervalMilliseconds": 250,
+    "unlockedPollIntervalMilliseconds": 1000
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 5,
+  "presencePolicies": {
+    "wake": {
+      "mode": "PhoneOnly",
+      "requireFreshAfterResume": false
+    },
+    "autoUnlock": {
+      "mode": "WatchAndPhone",
+      "requireFreshAfterResume": true
+    },
+    "autoLock": {
+      "mode": "PhoneOnly",
+      "requireFreshAfterResume": false
+    }
+  },
+  "ble": {
+    "enabled": true,
+    "manufacturerCompanyId": 76,
+    "samplingIntervalMilliseconds": 500,
+    "lockedPollIntervalMilliseconds": 250,
+    "backgroundPollIntervalMilliseconds": 1000,
+    "heartbeatSeconds": 10
+  },
+  "detection": {
+    "watchMatcher": {
+      "address": "",
+      "nameContains": "",
+      "serviceUuid": "",
+      "manufacturerDataHexPrefix": "",
+      "manufacturerDataHexPattern": ""
+    },
+    "watchRssiThreshold": -68,
+    "learnedWatchRssiThreshold": -82,
+    "watchHitCount": 1,
+    "watchHitWindowSeconds": 10,
+    "watchLostSeconds": 30,
+    "addressLearningWindowSeconds": 20,
+    "addressLearningMinimumHits": 3,
+    "phoneEnabled": true,
+    "phoneMatcher": {
+      "address": "",
+      "nameContains": "",
+      "serviceUuid": "",
+      "manufacturerDataHexPrefix": "",
+      "manufacturerDataHexPattern": ""
+    },
+    "phoneRssiThreshold": -82,
+    "phoneStrongRssiSingleHitThreshold": -60,
+    "phoneHitCount": 2,
+    "phoneHitWindowSeconds": 10,
+    "phonePresenceTimeoutSeconds": 20,
+    "maximumAdvertisementAgeSeconds": 5
+  },
+  "network": {
+    "enabled": true,
+    "allowedProfileNames": [],
+    "allowedSsids": []
+  },
+  "actions": {
+    "wake": {
+      "enabled": false,
+      "cooldownSeconds": 45,
+      "rearmSeconds": 30,
+      "sendMonitorPowerMessage": true,
+      "sendMouseNudge": true,
+      "sendSpaceKey": true
+    },
+    "autoLock": {
+      "enabled": false,
+      "absenceSeconds": 30,
+      "minimumUserIdleSeconds": 30,
+      "retrySeconds": 10
+    }
+  },
+  "autoUnlock": {
+    "enabled": false,
+    "authorizationTtlMilliseconds": 5000,
+    "responseTimeoutMilliseconds": 3000,
+    "requireAllowedNetwork": true,
+    "requireAcPower": true,
+    "triggerOnArrival": true,
+    "triggerOnInteractiveWake": true,
+    "interactiveWakeMinimumPriorIdleMilliseconds": 1000,
+    "interactiveWakeInputFreshMilliseconds": 2000,
+    "interactiveWakeMaximumPresenceAgeMilliseconds": 5000,
+    "interactiveWakeConfirmationMilliseconds": 6000,
+    "interactiveWakeAllowIdleFallback": true
+  }
+}

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProjectGuid>{B5089598-45F4-41A0-934F-5C68B5B465D6}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>BleProximityWake.Agent</RootNamespace>
+    <AssemblyName>BleProximityWake.Agent</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <ApplicationIcon>..\..\..\assets\ble-proximity-wake.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <StartupObject>BleProximityWake.Agent.Program</StartupObject>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Runtime">
+      <HintPath>$(WINDIR)\Microsoft.NET\Framework64\v4.0.30319\System.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices.WindowsRuntime">
+      <HintPath>$(WINDIR)\Microsoft.NET\Framework64\v4.0.30319\System.Runtime.InteropServices.WindowsRuntime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.WindowsRuntime">
+      <HintPath>$(WINDIR)\Microsoft.NET\Framework64\v4.0.30319\System.Runtime.WindowsRuntime.dll</HintPath>
+    </Reference>
+    <Reference Include="Windows.Devices">
+      <HintPath>$(WINDIR)\System32\WinMetadata\Windows.Devices.winmd</HintPath>
+      <IsWinMDFile>true</IsWinMDFile>
+    </Reference>
+    <Reference Include="Windows.Foundation">
+      <HintPath>$(WINDIR)\System32\WinMetadata\Windows.Foundation.winmd</HintPath>
+      <IsWinMDFile>true</IsWinMDFile>
+    </Reference>
+    <Reference Include="Windows.Networking">
+      <HintPath>$(WINDIR)\System32\WinMetadata\Windows.Networking.winmd</HintPath>
+      <IsWinMDFile>true</IsWinMDFile>
+    </Reference>
+    <Reference Include="Windows.Storage">
+      <HintPath>$(WINDIR)\System32\WinMetadata\Windows.Storage.winmd</HintPath>
+      <IsWinMDFile>true</IsWinMDFile>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AutoUnlock\AutoUnlockAuthorizationRequest.cs" />
+    <Compile Include="AutoUnlock\AutoUnlockBrokerProtocol.cs" />
+    <Compile Include="AutoUnlock\AutoUnlockBrokerResult.cs" />
+    <Compile Include="AutoUnlock\AutoUnlockBrokerStatus.cs" />
+    <Compile Include="AutoUnlock\AutoUnlockController.cs" />
+    <Compile Include="AutoUnlock\AutoUnlockInput.cs" />
+    <Compile Include="AutoUnlock\AutoUnlockRuntimeStatus.cs" />
+    <Compile Include="AutoUnlock\IAutoUnlockBrokerClient.cs" />
+    <Compile Include="AutoUnlock\IAutoUnlockRequestRunner.cs" />
+    <Compile Include="AutoUnlock\InteractiveWakeController.cs" />
+    <Compile Include="AutoUnlock\InteractiveWakeInput.cs" />
+    <Compile Include="AutoUnlock\InteractiveWakeRuntimeStatus.cs" />
+    <Compile Include="AutoUnlock\NamedPipeAutoUnlockBrokerClient.cs" />
+    <Compile Include="AutoUnlock\NetworkRevalidatingAutoUnlockBrokerClient.cs" />
+    <Compile Include="AutoUnlock\NoOpAutoUnlockBrokerClient.cs" />
+    <Compile Include="AutoUnlock\TaskAutoUnlockRequestRunner.cs" />
+    <Compile Include="Actions\ISystemActionExecutor.cs" />
+    <Compile Include="Actions\NoOpSystemActionExecutor.cs" />
+    <Compile Include="Actions\SystemActionResult.cs" />
+    <Compile Include="Actions\Win32SystemActionExecutor.cs" />
+    <Compile Include="Bluetooth\IBleAdvertisementSource.cs" />
+    <Compile Include="Bluetooth\WinRtBleAdvertisementSource.cs" />
+    <Compile Include="Configuration\AgentSettings.cs" />
+    <Compile Include="Configuration\AgentSettingsStore.cs" />
+    <Compile Include="Configuration\AutoUnlockSettings.cs" />
+    <Compile Include="Configuration\BleRuntimeSettings.cs" />
+    <Compile Include="Configuration\LegacyConfigImporter.cs" />
+    <Compile Include="Configuration\NetworkSettings.cs" />
+    <Compile Include="Configuration\SystemActionSettings.cs" />
+    <Compile Include="Diagnostics\CapabilitySnapshot.cs" />
+    <Compile Include="Diagnostics\FileLogger.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Runtime\AgentRuntime.cs" />
+    <Compile Include="Runtime\AgentRuntimeStatus.cs" />
+    <Compile Include="Runtime\DisplayPowerMonitor.cs" />
+    <Compile Include="Runtime\DisplayPowerState.cs" />
+    <Compile Include="Runtime\IRuntimeConditionSource.cs" />
+    <Compile Include="Runtime\NetworkContextProvider.cs" />
+    <Compile Include="Runtime\NetworkContextSnapshot.cs" />
+    <Compile Include="Runtime\RuntimeConditionMonitor.cs" />
+    <Compile Include="Runtime\RuntimeConditionSnapshot.cs" />
+    <Compile Include="Tray\TrayApplicationContext.cs" />
+    <None Include="app.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BleProximityWake.Core\BleProximityWake.Core.csproj">
+      <Project>{81A59C1A-3AB6-41C7-98C2-122C25B96C40}</Project>
+      <Name>BleProximityWake.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
