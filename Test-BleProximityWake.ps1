@@ -32,6 +32,26 @@ if (Test-Path -LiteralPath (Join-Path $scriptRoot "config.json")) {
 foreach ($name in $configFiles) {
     Get-Content (Join-Path $scriptRoot $name) -Raw -Encoding UTF8 | ConvertFrom-Json | Out-Null
 }
+
+Write-Host "Checking C# project source references..."
+$isGitWorkTree = Test-Path -LiteralPath (Join-Path $scriptRoot ".git")
+foreach ($projectFile in Get-ChildItem -Path $scriptRoot -Filter *.csproj -Recurse) {
+    [xml]$project = Get-Content -LiteralPath $projectFile.FullName -Raw
+    foreach ($compileItem in @($project.Project.ItemGroup.Compile)) {
+        if ($null -eq $compileItem -or [string]::IsNullOrWhiteSpace([string]$compileItem.Include)) {
+            continue
+        }
+
+        $sourcePath = Join-Path $projectFile.DirectoryName ([string]$compileItem.Include)
+        Assert-True (Test-Path -LiteralPath $sourcePath -PathType Leaf) "C# project source is missing: $sourcePath"
+        if ($isGitWorkTree) {
+            $relativeSourcePath = $sourcePath.Substring($scriptRoot.Length).TrimStart('\', '/') -replace '\\', '/'
+            & git -C $scriptRoot ls-files --error-unmatch -- $relativeSourcePath 2>$null | Out-Null
+            Assert-True ($LASTEXITCODE -eq 0) "C# project source is not tracked by Git: $relativeSourcePath"
+        }
+    }
+}
+
 $sampleConfig = Get-Content (Join-Path $scriptRoot "config.sample.json") -Raw -Encoding UTF8 | ConvertFrom-Json
 Assert-True ($sampleConfig.autoUnlock.triggerOnInteractiveWake -eq $true) "Sample config must expose interactive-wake auto-unlock."
 Assert-True ($sampleConfig.autoUnlock.invokeWakeToLoginOnArrival -eq $false) "Credential Provider arrival must skip wake-to-login simulation by default."

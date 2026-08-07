@@ -19,6 +19,6 @@ agent/tests/*/bin/
 agent/tests/*/obj/
 installer/staging/
 installer/output/
-diagnostics/
+/diagnostics/
 .vs/
 .vscode/
