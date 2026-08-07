@@ -78,6 +78,12 @@ try {
         "--import-only"
     ) -Wait -PassThru
     if ($process.ExitCode -ne 0) {
+        Get-ChildItem (Join-Path $smokeDirectory "logs") -Filter *.log -ErrorAction SilentlyContinue |
+            Sort-Object LastWriteTimeUtc |
+            ForEach-Object {
+                Write-Host "Agent failure log: $($_.FullName)"
+                Get-Content -LiteralPath $_.FullName
+            }
         throw "EXE Agent legacy import smoke test failed with exit code $($process.ExitCode)."
     }
     $importedSettings = Get-Content -LiteralPath (Join-Path $smokeDirectory "agent-settings.json") -Raw | ConvertFrom-Json
