@@ -5,7 +5,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$definition = Get-Content -LiteralPath $DefinitionPath -Raw
+$definition = Get-Content -LiteralPath $DefinitionPath -Raw -Encoding UTF8
 $autoUnlockUninstallFailureText = -join [char[]](
     0x81EA, 0x52A8, 0x89E3, 0x9501, 0x7EC4,
     0x4EF6, 0x5378, 0x8F7D, 0x5931, 0x8D25
