@@ -221,6 +221,10 @@ namespace BleProximityWake.Agent.Configuration
                     values,
                     "watchHitWindowSeconds",
                     fallback.WatchHitWindowSeconds),
+                WakeWatchPresenceSeconds = ReadInt(
+                    values,
+                    "wakeWatchPresenceSeconds",
+                    fallback.WakeWatchPresenceSeconds),
                 WatchLostSeconds = ReadInt(
                     values,
                     "watchLostSeconds",
@@ -285,6 +289,7 @@ namespace BleProximityWake.Agent.Configuration
                 ["learnedWatchRssiThreshold"] = settings.LearnedWatchRssiThreshold,
                 ["watchHitCount"] = settings.WatchHitCount,
                 ["watchHitWindowSeconds"] = settings.WatchHitWindowSeconds,
+                ["wakeWatchPresenceSeconds"] = settings.WakeWatchPresenceSeconds,
                 ["watchLostSeconds"] = settings.WatchLostSeconds,
                 ["addressLearningWindowSeconds"] = settings.AddressLearningWindowSeconds,
                 ["addressLearningMinimumHits"] = settings.AddressLearningMinimumHits,

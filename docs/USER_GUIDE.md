@@ -32,6 +32,10 @@ installer\output\BleProximityWake-0.1.0-win-x64.exe
 安装后 Agent 随用户登录自动启动，任务栏通知区域出现托盘图标。安装自动解锁组件
 不会自动启用它，也不会在安装过程中保存密码。
 
+开发版原地更新 Agent 时，必须同时刷新 Broker 的受信任程序哈希，否则自动解锁会被
+拒绝。管理员升级步骤见 [Agent 开发文档](../agent/README.md#本机开发版升级)；升级不应
+覆盖本机的 `agent-settings.json` 或重新登记密码。
+
 ## 3. 首次配置
 
 当前版本没有完整设置窗口。Agent 首次启动后生成：
@@ -53,6 +57,10 @@ installer\output\BleProximityWake-0.1.0-win-x64.exe
 完整配置样例见 `agent/agent-settings.sample.json`。关键规则：
 
 - `presencePolicies` 可为每个动作选择 `WatchAndPhone` 或 `PhoneOnly`。
+- 手表先到、手机稍晚到时，`detection.wakeWatchPresenceSeconds`（默认 20 秒）只延长
+  “靠近唤醒登录页”的已确认手表证据；自动解锁仍使用
+  `detection.watchHitWindowSeconds`（默认 10 秒）的严格命中窗口。超时后仍需新的
+  手表广播才能自动解锁。
 - `network.allowedProfileNames` 和 `allowedSsids` 支持大小写不敏感的 `*` 通配符。
 - 网络过滤开启但两个白名单都为空时，所有受网络约束的动作都被拒绝。
 - Agent 不使用网卡别名、DNS 后缀或用户可配置的 Broker 管道名。

@@ -240,7 +240,13 @@ namespace BleProximityWake.Agent.Runtime
                 Presence = presence,
                 WakePresence = PresenceDecisionEvaluator.Evaluate(
                     settings.PresencePolicies.Wake,
-                    presence.Observation),
+                    new PresenceObservation
+                    {
+                        WatchReady = presence.WakeWatchReady,
+                        PhoneReady = presence.Observation.PhoneReady,
+                        WatchFreshAfterResume = presence.Observation.WatchFreshAfterResume,
+                        PhoneFreshAfterResume = presence.Observation.PhoneFreshAfterResume
+                    }),
                 AutoUnlockPresence = PresenceDecisionEvaluator.Evaluate(
                     settings.PresencePolicies.AutoUnlock,
                     autoUnlockObservation),
@@ -378,7 +384,7 @@ namespace BleProximityWake.Agent.Runtime
         private void LogStatus(AgentRuntimeStatus status, int drained, DateTime nowUtc)
         {
             string summary = string.Format(
-                "Locked={0} Network={1} AC={2} Scan={3}/{4} WatchReady={5} PhoneReady={6} WakePresence={7} UnlockPresence={8} AutoLockPresence={9} Action={10}/{11} AutoUnlock={12} Interactive={13} UnlockCycle={14} UnlockAttempted={15} UnlockRetry={16} UnlockBroker={17} UnlockRequest={18} UnlockError={19}",
+                "Locked={0} Network={1} AC={2} Scan={3}/{4} WatchReady={5} PhoneReady={6} WakePresence={7} UnlockPresence={8} AutoLockPresence={9} Action={10}/{11} AutoUnlock={12} Interactive={13} UnlockCycle={14} UnlockAttempted={15} UnlockRetry={16} UnlockBroker={17} UnlockRequest={18} UnlockError={19} WakeWatchReady={20}",
                 status.Conditions.SessionLocked,
                 status.Conditions.Network.Allowed,
                 status.Conditions.AcPowerConnected,
@@ -398,7 +404,8 @@ namespace BleProximityWake.Agent.Runtime
                 status.AutoUnlock.RetryCount,
                 status.AutoUnlock.BrokerStatus,
                 status.AutoUnlock.RequestId,
-                status.AutoUnlock.Error);
+                status.AutoUnlock.Error,
+                status.Presence.WakeWatchReady);
             bool heartbeat = lastHeartbeatUtc == DateTime.MinValue ||
                 (nowUtc - lastHeartbeatUtc).TotalSeconds >= settings.Ble.HeartbeatSeconds;
             if (!string.Equals(summary, lastSummary, StringComparison.Ordinal) || heartbeat)

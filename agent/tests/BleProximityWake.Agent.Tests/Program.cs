@@ -34,6 +34,7 @@ namespace BleProximityWake.Agent.Tests
             Run("Matcher configuration validation", TestMatcherConfigurationValidation);
             Run("Configured address is authoritative", TestConfiguredAddressPrecedence);
             Run("Watch hits require one address", TestWatchHitsRequireOneAddress);
+            Run("Wake watch evidence outlives unlock hits", TestWakeWatchEvidenceWindow);
             Run("Watch address learning and rotation", TestWatchAddressLearningAndRotation);
             Run("Learned watch weak-signal path", TestLearnedWatchWeakSignalPath);
             Run("Phone strong-signal fast path", TestPhoneStrongSignalFastPath);
@@ -42,6 +43,7 @@ namespace BleProximityWake.Agent.Tests
             Run("Scan profile conditions", TestScanProfileConditions);
             Run("Schema 1 settings migration", TestSchemaOneMigration);
             Run("Agent runtime pipeline", TestAgentRuntimePipeline);
+            Run("Agent runtime wake and unlock evidence split", TestAgentRuntimeWakeEvidenceSplit);
             Run("Agent runtime resume reset", TestAgentRuntimeResumeReset);
             Run("Agent runtime interactive wake pipeline", TestAgentRuntimeInteractiveWake);
             Run("BLE watcher start protection", TestBleWatcherStartProtection);
@@ -174,6 +176,7 @@ namespace BleProximityWake.Agent.Tests
                 AgentSettings settings = AgentSettings.CreateDefaults();
                 settings.PresencePolicies.AutoUnlock.Mode = PresenceMode.PhoneOnly;
                 settings.Detection.PhoneMatcher.Address = "02:00:00:00:00:01";
+                settings.Detection.WakeWatchPresenceSeconds = 18;
                 settings.Network.AllowedSsids = new[] { "Example-Wired" };
                 settings.Actions.Wake.Enabled = true;
                 settings.AutoUnlock.InteractiveWakeConfirmationMilliseconds = 7000;
@@ -189,6 +192,7 @@ namespace BleProximityWake.Agent.Tests
                     loaded.Detection.PhoneMatcher.Address,
                     "saved phone address");
                 Equal("Example-Wired", loaded.Network.AllowedSsids[0], "saved SSID");
+                Equal(18, loaded.Detection.WakeWatchPresenceSeconds, "saved wake watch window");
                 True(loaded.Actions.Wake.Enabled, "saved wake action");
                 False(loaded.Actions.AutoLock.Enabled, "auto-lock remains disabled");
                 False(loaded.AutoUnlock.Enabled, "auto-unlock remains disabled");
@@ -353,6 +357,34 @@ namespace BleProximityWake.Agent.Tests
             True(
                 tracker.Evaluate(start.AddMilliseconds(200)).Observation.WatchReady,
                 "two hits from the same address should confirm the watch");
+        }
+
+        private static void TestWakeWatchEvidenceWindow()
+        {
+            PresenceDetectionOptions options = DetectionOptions();
+            options.WatchHitCount = 2;
+            var tracker = new DevicePresenceTracker(options);
+            DateTime start = DateTime.UtcNow;
+            tracker.Process(
+                Advertisement("AA:AA:AA:AA:AA:AA", -55, start, "004C:10052018A1B2C3"),
+                start);
+            False(tracker.Evaluate(start).WakeWatchReady, "unconfirmed watch cannot wake");
+
+            DateTime confirmedAt = start.AddSeconds(1);
+            tracker.Process(
+                Advertisement(
+                    "AA:AA:AA:AA:AA:AA", -55, confirmedAt, "004C:10052018A1B2C3"),
+                confirmedAt);
+            PresenceTrackerSnapshot delayed = tracker.Evaluate(confirmedAt.AddSeconds(15));
+            True(delayed.WakeWatchReady, "confirmed watch can wake during extended window");
+            False(delayed.Observation.WatchReady, "expired hits cannot authorize unlock");
+            False(
+                tracker.Evaluate(confirmedAt.AddSeconds(21)).WakeWatchReady,
+                "wake evidence expires after configured window");
+
+            tracker.Reset();
+            False(tracker.Evaluate(confirmedAt.AddSeconds(16)).WakeWatchReady,
+                "reset clears wake evidence");
         }
 
         private static void TestWatchAddressLearningAndRotation()
@@ -587,6 +619,43 @@ namespace BleProximityWake.Agent.Tests
                     True(active.Presence.Observation.WatchReady, "runtime watch presence");
                     True(active.Presence.Observation.PhoneReady, "runtime phone presence");
                     True(active.AutoUnlockPresence.PresenceReady, "runtime auto-unlock policy");
+                }
+            }
+            finally
+            {
+                Directory.Delete(directory, true);
+            }
+        }
+
+        private static void TestAgentRuntimeWakeEvidenceSplit()
+        {
+            string directory = TemporaryDirectory();
+            try
+            {
+                AgentSettings settings = AgentSettings.CreateDefaults();
+                settings.Detection = DetectionOptions();
+                settings.Detection.WatchHitWindowSeconds = 1;
+                settings.PresencePolicies.Wake.Mode = PresenceMode.WatchAndPhone;
+                var source = new FakeBleSource();
+                var conditions = new FakeConditionSource
+                {
+                    Snapshot = Conditions(true, true, true, 0, DateTime.MinValue)
+                };
+                using (var logger = new FileLogger(directory))
+                using (var runtime = new AgentRuntime(settings, logger, source, conditions))
+                {
+                    DateTime watchAt = DateTime.UtcNow.AddSeconds(-2);
+                    source.Enqueue(Advertisement(
+                        "AA:AA:AA:AA:AA:AA", -50, watchAt, "004C:10052018A1B2C3"));
+                    source.Enqueue(Advertisement(
+                        "02:00:00:00:00:01", -70, DateTime.UtcNow, string.Empty));
+                    source.Enqueue(Advertisement(
+                        "02:00:00:00:00:01", -70, DateTime.UtcNow, string.Empty));
+                    AgentRuntimeStatus status = runtime.Poll();
+                    True(status.Presence.WakeWatchReady, "wake retains confirmed watch");
+                    False(status.Presence.Observation.WatchReady, "unlock watch hits expired");
+                    True(status.WakePresence.PresenceReady, "wake policy uses extended evidence");
+                    False(status.AutoUnlockPresence.PresenceReady, "unlock policy remains strict");
                 }
             }
             finally

@@ -6,6 +6,8 @@ namespace BleProximityWake.Core.Presence
     {
         public PresenceObservation Observation { get; set; }
 
+        public bool WakeWatchReady { get; set; }
+
         public string PreferredWatchAddress { get; set; }
 
         public int PreferredWatchHits { get; set; }

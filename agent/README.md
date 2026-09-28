@@ -25,6 +25,8 @@
 - Apple 厂商数据通配匹配、临时地址学习和已学习地址弱信号路径；手表多次命中必须来自同一临时地址。
 - 手机固定地址/名称识别、普通双命中和强信号单次快速路径。
 - 靠近命中窗口与离开丢失窗口分离。
+- 已确认手表的亮屏证据可保留 20 秒（不超过离开丢失窗口），自动解锁仍按原有
+  10 秒手表命中窗口独立判断。
 - `SessionSwitch`、系统 Resume、真实网络名称、SSID 和交流电判断。
 - 网络 Profile 和 SSID 支持不区分大小写的精确匹配及 `*` 通配匹配。
 - 只有“锁屏 + 白名单网络 + 外接电源”使用 Active + 250ms，其余 Passive + 1000ms。
@@ -72,6 +74,21 @@ agent\bin\Release\BleProximityWake.Core.dll
 当前机器没有 4.8 Developer Pack，构建脚本会自动使用 Visual Studio 2022 自带的
 Roslyn 编译器和系统 `.NET Framework 4.8` 运行程序集，不需要下载额外依赖。
 
+## 本机开发版升级
+
+已安装自动解锁组件的本机，须从**管理员 64 位 Windows PowerShell**运行：
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\agent\Upgrade-LocalAgent.ps1
+```
+
+脚本仅更新已安装的 Agent EXE/Core DLL：先停止当前会话的 Agent，运行完整 Agent
+测试和烟雾测试，再备份旧二进制、复制新版本、同步 Broker 的受信任 Agent SHA-256，
+最后重新启动 Agent。测试或复制失败时不替换，或尝试回滚旧二进制及哈希。用户配置、
+登记凭据和 Provider 不会被修改；备份位置和测试日志分别输出到临时目录及
+`%TEMP%\BleProximityWake-upgrade-last.log`。升级后仍需核对托盘、Broker 状态和一次
+实际锁屏唤醒/手工登录回退。
+
 ## 测试
 
 ```powershell
@@ -89,6 +106,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\agent\Test-Agent.ps1 -
 - 手表地址学习、轮换和已学习地址弱信号路径。
 - 手机强信号单次路径、普通双命中和过期广播拒绝。
 - 靠近命中窗口与离开丢失窗口。
+- 手表先确认、手机晚到时的亮屏与自动解锁证据隔离、证据超时和重置。
 - Passive/Active 扫描条件。
 - 伪 BLE 源驱动的完整 Agent 运行链和 Resume 清队列。
 - 旧配置函数导入和 EXE 命令行导入。

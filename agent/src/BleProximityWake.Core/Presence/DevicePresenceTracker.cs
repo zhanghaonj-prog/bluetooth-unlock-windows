@@ -14,6 +14,7 @@ namespace BleProximityWake.Core.Presence
         private string lockedWatchAddress = string.Empty;
         private DateTime resumeUtc = DateTime.MinValue;
         private DateTime lastWatchSeenUtc = DateTime.MinValue;
+        private DateTime lastWakeWatchConfirmedUtc = DateTime.MinValue;
         private DateTime lastPostResumeWatchSeenUtc = DateTime.MinValue;
         private string lastWatchAddress = string.Empty;
         private int lastWatchRssi = -999;
@@ -70,6 +71,7 @@ namespace BleProximityWake.Core.Presence
             lockedWatchAddress = string.Empty;
             resumeUtc = DateTime.MinValue;
             lastWatchSeenUtc = DateTime.MinValue;
+            lastWakeWatchConfirmedUtc = DateTime.MinValue;
             lastPostResumeWatchSeenUtc = DateTime.MinValue;
             lastWatchAddress = string.Empty;
             lastWatchRssi = -999;
@@ -143,6 +145,10 @@ namespace BleProximityWake.Core.Presence
 
             return new PresenceTrackerSnapshot
             {
+                WakeWatchReady = IsRecent(
+                    lastWakeWatchConfirmedUtc,
+                    nowUtc,
+                    Math.Min(options.WakeWatchPresenceSeconds, options.WatchLostSeconds)),
                 Observation = new PresenceObservation
                 {
                     WatchReady = watchReady,
@@ -256,6 +262,10 @@ namespace BleProximityWake.Core.Presence
             lastWatchSeenUtc = recordUtc;
             watchHitAddress = address;
             watchHits++;
+            if (watchHits >= options.WatchHitCount)
+            {
+                lastWakeWatchConfirmedUtc = recordUtc;
+            }
             lastWatchAddress = advertisement.Address ?? string.Empty;
             lastWatchRssi = advertisement.Rssi;
             if (IsOnOrAfterResume(recordUtc))

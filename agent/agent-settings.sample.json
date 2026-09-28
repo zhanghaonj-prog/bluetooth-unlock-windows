@@ -34,6 +34,7 @@
     "learnedWatchRssiThreshold": -82,
     "watchHitCount": 1,
     "watchHitWindowSeconds": 10,
+    "wakeWatchPresenceSeconds": 20,
     "watchLostSeconds": 30,
     "addressLearningWindowSeconds": 20,
     "addressLearningMinimumHits": 3,

@@ -14,6 +14,8 @@ namespace BleProximityWake.Core.Presence
 
         public int WatchHitWindowSeconds { get; set; } = 10;
 
+        public int WakeWatchPresenceSeconds { get; set; } = 20;
+
         public int WatchLostSeconds { get; set; } = 30;
 
         public int AddressLearningWindowSeconds { get; set; } = 20;
@@ -52,6 +54,7 @@ namespace BleProximityWake.Core.Presence
             }
             RequirePositive(WatchHitCount, "WatchHitCount");
             RequirePositive(WatchHitWindowSeconds, "WatchHitWindowSeconds");
+            RequirePositive(WakeWatchPresenceSeconds, "WakeWatchPresenceSeconds");
             RequirePositive(WatchLostSeconds, "WatchLostSeconds");
             RequirePositive(AddressLearningWindowSeconds, "AddressLearningWindowSeconds");
             RequirePositive(AddressLearningMinimumHits, "AddressLearningMinimumHits");
